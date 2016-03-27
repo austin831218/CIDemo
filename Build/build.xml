@@ -5,6 +5,7 @@
     <srcDir>..\src</srcDir>
     <nugetExe>$(srcDir)\.nuget\nuget.exe</nugetExe>
     <outDir>..\publish</outDir>
+    <stagingSite>D:\CCSites\CIDemo</stagingSite>
     <CDate>$([System.DateTime]::Now.ToString(`yyyy-MM-dd`))</CDate>
     <webProjPath>$(srcDir)\CIDemo\CIDemo.csproj</webProjPath>
     <stagingProfile>Local</stagingProfile>    
@@ -28,8 +29,11 @@
     <Exec Command='mstest.exe /nologo $(TaskContainers)' />
   </Target>
   <Target Name="pubStaging">
-    <MSBuild Projects=".\build.xml" Targets="debugbuild"></MSBuild>
+    <MSBuild Projects=".\build.xml" Targets="clean"></MSBuild>
+    <MSBuild Projects=".\build.xml" Targets="nurestore"></MSBuild>
     <MSBuild Projects="$(webProjPath)" Properties="DeployOnBuild=true;PublishProfile=$(stagingProfile);Configuration=Debug"></MSBuild>
+    <Exec Command='rmdir /S /Q $(stagingSite)' />
+    <Exec Command="xcopy * $(stagingSite) /Y /S /I" WorkingDirectory="$(outDir)"></Exec>
   </Target>
 </Project>
 
