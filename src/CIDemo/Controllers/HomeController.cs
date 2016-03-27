@@ -29,7 +29,7 @@ namespace CIDemo.Controllers
         }
         public ActionResult Test()
         {            
-            return Content("Test12");
+            return Content("Test");
         }
     }
 }
