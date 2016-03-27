@@ -7,6 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CIDemo", "CIDemo\CIDemo.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CIDemo.Tests", "CIDemo.Tests\CIDemo.Tests.csproj", "{46B7B3B2-87C6-45AC-9D75-9D1D3F77D6F1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{A1A2221F-4893-4880-A9EE-A5CA322C6236}"
+	ProjectSection(SolutionItems) = preProject
+		..\Build\build.xml = ..\Build\build.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

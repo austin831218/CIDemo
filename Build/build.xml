@@ -1,18 +1,35 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" DefaultTargets="staging">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" DefaultTargets="stagingbuild">
   <UsingTask TaskName="TransformXml"
                AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v12.0\Web\Microsoft.Web.Publishing.Tasks.dll"/>
   <PropertyGroup>
     <srcDir>..\src</srcDir>
+    <nugetExe>$(srcDir)\.nuget\nuget.exe</nugetExe>
     <outDir>..\publish</outDir>
     <CDate>$([System.DateTime]::Now.ToString(`yyyy-MM-dd`))</CDate>
     <webProjPath>$(srcDir)\CIDemo\CIDemo.csproj</webProjPath>
     <stagingProfile>Local</stagingProfile>    
-    <StagingTest>$(buildPath)\TimeEntry.Test\bin\Debug\TimeEntry.Test.dll</StagingTest>
-    <TaskContainers>/testcontainer:$(TimeEntryTest)</TaskContainers>
+    <StagingTest>$(srcDir)\CIDemo.Tests\bin\CIDemo.Tests.dll</StagingTest>
+    <TaskContainers>/testcontainer:$(StagingTest)</TaskContainers>
   </PropertyGroup>
-  <Target Name="staging">
+  <Target Name="nurestore">
+    <Exec Command='$(nugetExe) restore  $(srcDir)\CIDemo.sln '></Exec>
+  </Target>
+  <Target Name="clean">
     <Exec Command='rmdir /S /Q $(outDir)' />
-    <MSBuild Projects="$(webProjPath)" Properties="DeployOnBuild=true;PublishProfile=$(stagingProfile);Configuration=Debug"></MSBuild> 
+  </Target>
+  <Target Name="stagingbuild">
+    <PropertyGroup>
+      <Configuration Condition="$(Configuration) == ''">Debug</Configuration>
+      <BuildTarget Condition="$(BuildTarget) == ''">Rebuild</BuildTarget>
+    </PropertyGroup>
+    <MSBuild Projects=".\build.xml" Targets="clean"></MSBuild>
+    <MSBuild Projects=".\build.xml" Targets="nurestore"></MSBuild>
+    <MSBuild Projects="$(srcDir)\CIDemo.sln" Properties='Configuration=$(Configuration);OutDir=bin\;nowarn=1591' Targets='$(BuildTarget)'></MSBuild>
+    <Exec Command='mstest.exe /nologo $(TaskContainers)' />
+  </Target>
+  <Target Name="pubStaging">
+    <MSBuild Projects=".\build.xml" Targets="debugbuild"></MSBuild>
+    <MSBuild Projects="$(webProjPath)" Properties="DeployOnBuild=true;PublishProfile=$(stagingProfile);Configuration=Debug"></MSBuild>
   </Target>
 </Project>
 
