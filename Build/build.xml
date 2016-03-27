@@ -1,0 +1,19 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" DefaultTargets="staging">
+  <UsingTask TaskName="TransformXml"
+               AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v12.0\Web\Microsoft.Web.Publishing.Tasks.dll"/>
+  <PropertyGroup>
+    <srcDir>..\src</srcDir>
+    <outDir>..\publish</outDir>
+    <CDate>$([System.DateTime]::Now.ToString(`yyyy-MM-dd`))</CDate>
+    <webProjPath>$(srcDir)\CIDemo\CIDemo.csproj</webProjPath>
+    <stagingProfile>Local</stagingProfile>    
+    <StagingTest>$(buildPath)\TimeEntry.Test\bin\Debug\TimeEntry.Test.dll</StagingTest>
+    <TaskContainers>/testcontainer:$(TimeEntryTest)</TaskContainers>
+  </PropertyGroup>
+  <Target Name="staging">
+    <Exec Command='rmdir /S /Q $(outDir)' />
+    <MSBuild Projects="$(webProjPath)" Properties="DeployOnBuild=true;PublishProfile=$(stagingProfile);Configuration=Debug"></MSBuild> 
+  </Target>
+</Project>
+
+
