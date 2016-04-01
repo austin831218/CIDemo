@@ -61,7 +61,7 @@ namespace CIDemo.Tests.Controllers
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual("Test1", result.Content);
+            Assert.AreEqual("Test", result.Content);
             
         }
     }
