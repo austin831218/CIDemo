@@ -10,8 +10,20 @@ namespace CIDemo.Controllers
     {
         public ActionResult Index()
         {
+            var assembly = this.GetType().Assembly;
+            var assemblyName = assembly.GetName().Name;
+            var version = assembly.GetName().Version;
+            var gitVersionInformationType = assembly.GetType(assemblyName + ".GitVersionInformation");
+            List<string> result = new List<string>();
+            result.Add(string.Format("Config value:{0}", System.Configuration.ConfigurationManager.AppSettings["test"]));
+            result.Add(string.Format("Version:{0}", version));
+            var fields = gitVersionInformationType.GetFields();
 
-            return Content(System.Configuration.ConfigurationManager.AppSettings["test"]);
+            foreach (var field in fields)
+            {
+                result.Add(string.Format("{0}: {1}", field.Name, field.GetValue(null)));
+            }
+            return Content(string.Join("<br />", result.ToArray()));
         }
 
         public ActionResult About()
@@ -28,7 +40,7 @@ namespace CIDemo.Controllers
             return View();
         }
         public ActionResult Test()
-        {            
+        {
             return Content("Test");
         }
     }
