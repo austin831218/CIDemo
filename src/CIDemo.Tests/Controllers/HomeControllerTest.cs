@@ -48,7 +48,7 @@ namespace CIDemo.Tests.Controllers
             ViewResult result = controller.Contact() as ViewResult;
 
             // Assert
-            Assert.IsNotNull(result);
+            Assert.IsNotNull(null);
         }
         [TestMethod]
         public void GetConfig()
